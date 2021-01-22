@@ -20,8 +20,6 @@ class tpCal(QWidget):
         self.ui.setupUi(self)
         self.setWindowTitle("t-p相空间")
 
-        # self.ui.comboBox.setModel(QStandardItemModel(self))
-        # self.ui.comboBox.view().pressed.connect(self.handleItemPressed)
         self.selectBunch = [] #存储选中的Bunch
         self.ui.isUsed.setEnabled(False)
 
@@ -48,11 +46,13 @@ class tpCal(QWidget):
 
         if self.ui.isUsed.isChecked():
             self.ui.comboBox.setItemData(index, QColor(Qt.red), Qt.BackgroundRole)
-            self.selectBunch.append(index)
+            if index not in self.selectBunch:
+                self.selectBunch.append(index)
         else:
             self.ui.comboBox.setItemData(index, QColor(Qt.white), Qt.BackgroundRole)
             if index in self.selectBunch:
                 self.selectBunch.remove(index)
+        print(self.selectBunch)
 
     def on_combobox_slot(self):
         index = self.ui.comboBox.currentIndex()
