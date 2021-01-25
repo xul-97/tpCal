@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>529</width>
-    <height>569</height>
+    <width>639</width>
+    <height>665</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -34,9 +34,9 @@
   <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
-     <x>357</x>
+     <x>375</x>
      <y>50</y>
-     <width>151</width>
+     <width>251</width>
      <height>111</height>
     </rect>
    </property>
@@ -48,20 +48,20 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>2</y>
+      <y>6</y>
       <width>101</width>
       <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>FWHM(Current)</string>
+     <string>FWHM(Current):</string>
     </property>
    </widget>
    <widget class="QDoubleSpinBox" name="FWHMSPinBox">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>27</y>
+      <x>111</x>
+      <y>6</y>
       <width>51</width>
       <height>21</height>
      </rect>
@@ -73,8 +73,8 @@
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>25</y>
+      <x>181</x>
+      <y>5</y>
       <width>21</width>
       <height>21</height>
      </rect>
@@ -87,20 +87,20 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>60</y>
-      <width>71</width>
+      <y>43</y>
+      <width>81</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Energy Unit</string>
+     <string>Energy Unit:</string>
     </property>
    </widget>
    <widget class="QDoubleSpinBox" name="EnergyUnitSpinBox">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>80</y>
+      <x>110</x>
+      <y>43</y>
       <width>51</width>
       <height>21</height>
      </rect>
@@ -112,33 +112,14 @@
    <widget class="QLabel" name="label_9">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>80</y>
+      <x>170</x>
+      <y>43</y>
       <width>71</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
      <string>MeV/100pixel</string>
-    </property>
-   </widget>
-   <widget class="Line" name="line">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>48</y>
-      <width>151</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Plain</enum>
-    </property>
-    <property name="lineWidth">
-     <number>2</number>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
     </property>
    </widget>
   </widget>
@@ -223,7 +204,7 @@
   <widget class="QLabel" name="label_15">
    <property name="geometry">
     <rect>
-     <x>330</x>
+     <x>440</x>
      <y>174</y>
      <width>101</width>
      <height>21</height>
@@ -236,7 +217,7 @@
   <widget class="QLineEdit" name="bunchSimilarity">
    <property name="geometry">
     <rect>
-     <x>430</x>
+     <x>540</x>
      <y>175</y>
      <width>71</width>
      <height>20</height>
@@ -251,7 +232,7 @@
     <rect>
      <x>13</x>
      <y>50</y>
-     <width>336</width>
+     <width>351</width>
      <height>111</height>
     </rect>
    </property>
@@ -262,9 +243,9 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>4</x>
+      <x>8</x>
       <y>76</y>
-      <width>301</width>
+      <width>331</width>
       <height>31</height>
      </rect>
     </property>
@@ -305,7 +286,7 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>30</width>
+         <width>20</width>
          <height>20</height>
         </size>
        </property>
@@ -314,7 +295,7 @@
      <item>
       <widget class="QPushButton" name="calUsingBunchBtn">
        <property name="text">
-        <string>Start</string>
+        <string>Data Processing</string>
        </property>
       </widget>
      </item>
@@ -323,9 +304,9 @@
    <widget class="QWidget" name="layoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>4</x>
+      <x>8</x>
       <y>0</y>
-      <width>321</width>
+      <width>331</width>
       <height>71</height>
      </rect>
     </property>
@@ -458,7 +439,7 @@
     <rect>
      <x>15</x>
      <y>10</y>
-     <width>491</width>
+     <width>611</width>
      <height>31</height>
     </rect>
    </property>
@@ -498,7 +479,7 @@
       </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>80</width>
+        <width>120</width>
         <height>20</height>
        </size>
       </property>
@@ -531,8 +512,8 @@
     <rect>
      <x>15</x>
      <y>210</y>
-     <width>491</width>
-     <height>321</height>
+     <width>611</width>
+     <height>411</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_2">
@@ -659,14 +640,17 @@
   <widget class="QProgressBar" name="progressBar">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>540</y>
+     <x>430</x>
+     <y>636</y>
      <width>191</width>
      <height>20</height>
     </rect>
    </property>
+   <property name="maximum">
+    <number>0</number>
+   </property>
    <property name="value">
-    <number>24</number>
+    <number>0</number>
    </property>
   </widget>
  </widget>
