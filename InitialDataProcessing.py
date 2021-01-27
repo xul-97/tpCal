@@ -3,22 +3,34 @@
 # @Email   : xuliang@sinap.ac.cn 
 # @Time    : 2021/1/22 14:09
 
+from PyQt5.QtCore import QThread,pyqtSignal
 import numpy as np
 from scipy.io import loadmat
 from scipy.signal import medfilt
 
 
-class DataProcessing():
+class DataProcessing(QThread):
+
+    updateProcessBar = pyqtSignal(float)
 
     BeginCurrent = np.empty([0,500])
     EndCurrent = np.empty([0,500])
     deltaEmat = np.empty([0,503])
     bunchGroup = np.empty([0,2],dtype=int)
+    n = 200
+    bunchGroupNumber = 10
+    energyUnit = 2.8
     def __init__(self):
         super(DataProcessing, self).__init__()
+
+    def run(self):
+        try:
+            self.cal_deltaE(self.n,self.bunchGroupNumber,self.energyUnit)
+        except Exception as e:
+            print(e)
+
     def data_processing(self, n = 200, position = "Begin"):
         '''
-
         :param n: the number of Bunch
         :param position: the mark of the data from Begin or End
         :return:
@@ -81,11 +93,14 @@ class DataProcessing():
 
     def cal_deltaE(self,n = 200, bunchGroupNumber = 10, energyUnit = 2.8):
 
+        self.updateProcessBar.emit(0)
+
         dcSum = np.zeros([n,n])
         bunchGroup = np.zeros([bunchGroupNumber + 1,2],dtype=int)
         bunchSimilarity = np.zeros(bunchGroupNumber + 1)
 
         for i in range(1, n+1):
+            self.updateProcessBar.emit(i / n * 0.5)
             currentBegin = np.loadtxt("./firstDataProcessing/current_Begin_" + str(i) + ".txt")
 
             for j in range(1, n+1):
@@ -106,6 +121,7 @@ class DataProcessing():
         markEnd = np.loadtxt("./firstDataProcessing/markEnd.txt").astype(int)
 
         for k in range(bunchGroupNumber):
+
             DataProcessing.bunchGroup = np.vstack((DataProcessing.bunchGroup,bunchGroup[k,:]))
             imgFiltBegin = np.loadtxt("./firstDataProcessing/imgFilt_Begin_" + str(bunchGroup[k,0] + 1) + ".txt")
             imgFiltEnd = np.loadtxt("./firstDataProcessing/imgFilt_End_" + str(bunchGroup[k,1] + 1)+ ".txt")
@@ -166,6 +182,8 @@ class DataProcessing():
             bunchGroup[k + 1, 0] = np.where(dcSum == minCurrent)[0][0]
             bunchGroup[k + 1, 1] = np.where(dcSum == minCurrent)[1][0]
             bunchSimilarity[k + 1] = (1 - minCurrent / 2) * 100
+
+            self.updateProcessBar.emit((k + 1) / bunchGroupNumber * 0.5 + 0.5)
 
         np.savetxt("./firstDataProcessing/deltaEmat.txt",deltaEmat)
 

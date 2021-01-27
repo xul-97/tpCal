@@ -37,18 +37,21 @@ class figureCanvas(XYCanvas):
 
 
     def update_figure(self,kind = "current"):
-        self.ax.cla()
-        self.ax.grid()
-        if kind == "current":
-            self.ax.set_title("Current",fontsize = 7)
-            self.ax.set_xlabel("t[ps]",fontsize = 7)
-            self.ax.set_ylabel("current[A]",fontsize = 7)
-            self.ax.plot(self.t,self.current,'r')
-        elif kind == "wake":
-            self.ax.set_title("ΔE", fontsize=7)
-            self.ax.set_xlabel("s[um]", fontsize=7)
-            self.ax.set_ylabel("energy[MeV]", fontsize=7)
-            self.ax.plot(self.t, self.current, 'g')
+        try:
+            self.ax.cla()
+            self.ax.grid()
+            if kind == "current":
+                self.ax.set_title("Current",fontsize = 7)
+                self.ax.set_xlabel("t[ps]",fontsize = 7)
+                self.ax.set_ylabel("current[A]",fontsize = 7)
+                self.ax.plot(self.t,self.current,'r')
+            elif kind == "wake":
+                self.ax.set_title("ΔE", fontsize=7)
+                self.ax.set_xlabel("s[um]", fontsize=7)
+                self.ax.set_ylabel("energy[MeV]", fontsize=7)
+                self.ax.plot(self.t, self.current, 'g')
 
-        self.draw()
+            self.draw()
+        except Exception as e:
+            print(e)
 
