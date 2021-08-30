@@ -11,11 +11,12 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 class XYCanvas(FigureCanvas):
 
     def __init__(self):
-        self.figure = plt.figure(figsize=(10,5),frameon = False)
+        self.figure = plt.figure(figsize=(8,4),frameon = False)
         plt.subplots_adjust(left=0.09, right=0.98, bottom=0.15, top=0.9)
         plt.grid()
         plt.ylabel("x/y")
-        plt.ylim(0,10)
+        plt.ylim(0,500)
+        plt.xlim(0,500)
         self.ax = self.figure.add_subplot()
         self.compute_initial_figure()
 
@@ -28,7 +29,7 @@ class XYCanvas(FigureCanvas):
 class figureCanvas(XYCanvas):
     def __init__(self):
         XYCanvas.__init__(self)
-        plt.subplots_adjust(left=0.17, right=0.98, bottom=0.2, top=0.9)
+        plt.subplots_adjust(left=0.2, right=0.92, bottom=0.2, top=0.9)
         self.t = []
         self.current = []
 

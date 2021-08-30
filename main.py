@@ -23,7 +23,10 @@ class tpCal(QWidget):
         self.ui.setupUi(self)
         self.setWindowTitle("t-p相空间")
 
-        self.ui.progressBar.hide()
+        self.ui.progressBarBegin.hide()
+        self.ui.progressBarEnd.hide()
+        self.ui.beginComplete.hide()
+        self.ui.endComplete.hide()
 
         self.dataProcessing = DataProcessing()
         self.dataProcessing.updateProcessBar.connect(self.update_progressBar)
