@@ -20,16 +20,27 @@ class DataProcessing(QThread):
     n = 200
     bunchGroupNumber = 10
     energyUnit = 2.8
+    position = "Begin"
+    rotNumber = 0
+    filterValue = 10
+    step = 1
+    filePath = ""
+    flag  = "1"
+
+
     def __init__(self):
         super(DataProcessing, self).__init__()
 
     def run(self):
         try:
-            self.cal_deltaE(self.n,self.bunchGroupNumber,self.energyUnit)
+            if self.step == 1:
+                self.data_processing(self.n,self.position,self.flag)
+            else:
+                self.cal_deltaE(self.n,self.bunchGroupNumber,self.energyUnit)
         except Exception as e:
             print(e)
 
-    def data_processing(self, n = 200, position = "Begin"):
+    def data_processing(self, n = 200, position = "Begin",flag = "1"):
         '''
         :param n: the number of Bunch
         :param position: the mark of the data from Begin or End
@@ -38,15 +49,18 @@ class DataProcessing(QThread):
         #存储截取数据的索引
         mark = np.zeros([n,2],dtype= int)
         mark[:,1] = 499
+        self.updateProcessBar.emit(0)
 
         for i in range(1,n+1):
-            data = loadmat("./dataFromEpics/img1_" + str(i) + ".mat")["img_g"]
+            data = np.loadtxt(self.filePath + "\\dataFromEpics\\img" + flag + "_" + str(i) + ".txt")
+            print("img" + flag + "_" + str(i) + ".txt" + "加载成功")
+            self.updateProcessBar.emit(i / n)
             #小于10的数据置0
-            data[data < 10] = 0
+            data[data < self.filterValue] = 0
 
             #中值滤波
             imgFilt = medfilt(data, [21, 21])
-            imgFilt = np.rot90(imgFilt, 2)
+            imgFilt = np.rot90(imgFilt, self.rotNumber)
 
             #求电流值并归一化
             current = np.sum(imgFilt, axis=0) / np.sum(imgFilt)
@@ -84,12 +98,12 @@ class DataProcessing(QThread):
 
             #归一化
             current = current / np.sum(current)
-            globals()['DataProcessing.' + position + 'Current'] = np.vstack(( globals()['DataProcessing.' + position + 'Current'],current))
+            # globals()['DataProcessing.' + position + 'Current'] = np.vstack(( globals()['DataProcessing.' + position + 'Current'],current))
 
-            np.savetxt("./firstDataProcessing/imgFilt_" + position + "_" + str(i) + ".txt", imgFilt)
-            np.savetxt("./firstDataProcessing/current_" + position + "_" + str(i) + ".txt", current)
+            np.savetxt(self.filePath + "\\firstDataProcessing\\imgFilt_" + position + "_" + str(i) + ".txt", imgFilt)
+            np.savetxt(self.filePath + "\\firstDataProcessing\\current_" + position + "_" + str(i) + ".txt", current)
 
-        np.savetxt("./firstDataProcessing/mark" + position + ".txt", mark)
+        np.savetxt(self.filePath + "\\firstDataProcessing\\mark" + position + ".txt", mark)
 
     def cal_deltaE(self,n = 200, bunchGroupNumber = 10, energyUnit = 2.8):
 
@@ -101,10 +115,11 @@ class DataProcessing(QThread):
 
         for i in range(1, n+1):
             self.updateProcessBar.emit(i / n * 0.5)
-            currentBegin = np.loadtxt("./firstDataProcessing/current_Begin_" + str(i) + ".txt")
+            currentBegin = np.loadtxt(self.filePath + "\\firstDataProcessing\\current_Begin_" + str(i) + ".txt")
+            print("current_Begin_" + str(i) + ".txt" + "加载成功")
 
             for j in range(1, n+1):
-                currentEnd = np.loadtxt("./firstDataProcessing/current_End_" + str(j) + ".txt")
+                currentEnd = np.loadtxt(self.filePath + "\\firstDataProcessing\\current_End_" + str(j) + ".txt")
 
                 deltaCurrent = np.abs(currentEnd - currentBegin)
                 dcSum[i - 1, j -1] = np.sum(deltaCurrent)
@@ -117,14 +132,14 @@ class DataProcessing(QThread):
         bunchSimilarity[0] = (1 - minCurrent / 2) * 100
         deltaEmat = np.empty([bunchGroupNumber,503])
 
-        markBegin = np.loadtxt("./firstDataProcessing/markBegin.txt").astype(int)
-        markEnd = np.loadtxt("./firstDataProcessing/markEnd.txt").astype(int)
+        markBegin = np.loadtxt(self.filePath + "\\firstDataProcessing\\markBegin.txt").astype(int)
+        markEnd = np.loadtxt(self.filePath + "\\firstDataProcessing\\markEnd.txt").astype(int)
 
         for k in range(bunchGroupNumber):
 
             DataProcessing.bunchGroup = np.vstack((DataProcessing.bunchGroup,bunchGroup[k,:]))
-            imgFiltBegin = np.loadtxt("./firstDataProcessing/imgFilt_Begin_" + str(bunchGroup[k,0] + 1) + ".txt")
-            imgFiltEnd = np.loadtxt("./firstDataProcessing/imgFilt_End_" + str(bunchGroup[k,1] + 1)+ ".txt")
+            imgFiltBegin = np.loadtxt(self.filePath + "\\firstDataProcessing\\imgFilt_Begin_" + str(bunchGroup[k,0] + 1) + ".txt")
+            imgFiltEnd = np.loadtxt(self.filePath + "\\firstDataProcessing\\imgFilt_End_" + str(bunchGroup[k,1] + 1)+ ".txt")
 
 
             print(k,bunchGroup[k,:] + 1,markBegin[bunchGroup[k,0],:],markBegin[bunchGroup[k,1],:])
@@ -185,7 +200,7 @@ class DataProcessing(QThread):
 
             self.updateProcessBar.emit((k + 1) / bunchGroupNumber * 0.5 + 0.5)
 
-        np.savetxt("./firstDataProcessing/deltaEmat.txt",deltaEmat)
+        np.savetxt(self.filePath + "\\firstDataProcessing\\deltaEmat.txt",deltaEmat)
 
 
 
